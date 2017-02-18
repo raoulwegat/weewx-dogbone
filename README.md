@@ -1,6 +1,6 @@
-# Weewx Australia :iphone:
+# Weewx Dogbone :iphone:
 
-*An Australian mobile skin+extension for weewx that has BOM forecast and radar data.*
+*An Australian mobile-first  skin+extension for weewx that has BOM forecast and radar data. Woof*
 
 
 ![screenshot](https://github.com/raoulwegat/weewx-dogbone/raw/master/screenshot.png)
@@ -9,7 +9,7 @@
 
 ## Description
 
-This is a [Weewx](http://www.weewx.com) mobile skin+extension that shows
+Dogbone is a [Weewx](http://www.weewx.com) mobile skin+extension that shows
 Australian Bureau of Meteorology (BOM) forecast and radar data in a beautiful
 mobile-friendly format.
 
