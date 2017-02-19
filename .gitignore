@@ -2,3 +2,4 @@
 *.psd
 .remote-sync.json
 .sass-cache
+*.mov

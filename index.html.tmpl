@@ -1,0 +1,344 @@
+#import dateutil.parser
+#include "header.tmpl"
+<body class="home">
+
+	#set $FC = $aus.FC_LOCAL.forecast('area',description=str($aus.index_locality))
+
+    <header>
+        <div class="container-fix">
+
+			<div class="home-left-75">
+				<a href="https://www.google.com/maps/?q=$station.latitude_f, $station.longitude_f" target="_blank" ><h1>$station.location</h1></a>
+			</div>
+			<div class="home-right-25">
+				#if $aus.WARNINGS.channel.getNode('item[1]') is not None
+					<div class="notification">
+						<i class="fa fa-bell fa-pulse" id="notification"></i>
+					</div>
+				#end if
+			</div>
+			<div class="text-big">
+				<img src="$aus.icons[$FC.getNode('forecast-period',index=0).getNode('element',type="forecast_icon_code").string]"/>
+				$current.outTemp
+			</div>
+
+			<div class="text-small text-align-left">Feels like $current.appTemp</div>
+
+			<div class="home-left">
+				#if $current.windSpeed.raw > 1
+					<div class="text-small">Wind $current.windSpeed $current.windDir.ordinal_compass</div>
+				#else
+					<div class="text-small">Wind Still</div>
+				#end if
+			</div>
+
+			<div class="home-right">
+				<div class="text-small text-align-right">Humidity $current.outHumidity</div>
+			</div>
+
+        </div>
+    </header>
+
+	<div class="main" >
+        <div class="container">
+
+			#if $aus.WARNINGS.channel.getNode('item[1]') is not None
+				<div class="card warnings">
+
+					<h3>Warnings</h3>
+
+					<table class="warnings-table">
+						<tbody>
+
+							#for $wnCount in range(1,21)
+
+								#set $wnIndex = '[' + str($wnCount) +']'
+								#if $aus.WARNINGS.channel.getNode('item'+$wnIndex) is None
+									#break
+								#end if
+
+								<tr class="warning">
+									<td>
+										#import re
+										#set url = $aus.WARNINGS.channel.getNode('item'+$wnIndex).link
+										#set shit_title = $aus.WARNINGS.channel.getNode('item'+$wnIndex).title
+										##set pleasant_title = re.sub('^[0-9].*T', '', $shit_title)
+										<a href="$url"><i class="fa fa-arrow-circle-right dunkelgrau"></i> $shit_title</a>
+									</td>
+								</tr>
+
+							#end for
+
+						</tbody>
+					</table>
+
+				</div>
+			#end if
+
+
+			<div class="card first">
+
+				<table class="forecast">
+					<tbody>
+
+						#for $fcCount in range(8)
+						#set $fcIndex = str($fcCount)
+						#if $FC.getNode('forecast-period',index=$fcIndex) is not None
+
+							#set $min = $FC.getNode('forecast-period',index=$fcIndex).getNode('element',type="air_temperature_minimum")
+							##set $min_int = int($min)
+
+							#set $max = $FC.getNode('forecast-period',index=$fcIndex).getNode('element',type="air_temperature_maximum")
+
+							<tr class="day" id="day_$fcIndex">
+
+								<td class="icon">
+									<img src="$aus.iconsSml[$FC.getNode('forecast-period',index=$fcIndex).getNode('element',type="forecast_icon_code").string]"/>
+								</td>
+
+								#if $fcIndex == "0"
+									<td>Today</td>
+								#else if $fcIndex == "1"
+									<td>Tomorrow</td>
+								#else
+									<td>$dateutil.parser.parse($FC.getNode('forecast-period',index=$fcIndex).start__time__local).strftime("%A")</td>
+								#end if
+
+								<!-- <td class="range" colspan="2">
+									##set $diff = ( $max - $min )
+								</td> -->
+
+								<td class="min">$min</td>
+								<td class="max">$max</td>
+							</tr>
+							<tr class="description description_$fcIndex">
+								<td></td>
+								<td colspan="3">$FC.getNode('forecast-period',index=$fcIndex).text</td>
+							</tr>
+
+							<tr>
+								<td colspan="4"><hr></td>
+							</tr>
+						#end if
+						#end for
+
+					</tbody>
+				</table>
+
+			</div>
+
+			<div class="card first">
+				<h3>Inside temp &amp; humidity</h3>
+				<div class="home-left text-medium">$current.inTemp</div>
+				<div class="home-right text-medium">$current.inHumidity</div>
+			</div>
+
+
+            <div class="card radar">
+				<div class="background">
+					<div class="topography">
+						<div class="locations">
+							<img class="animation" id="animation" src="" />
+							<div class="animation-text"></div>
+							<div class="tools">
+								<span id="zoom128" class="tool">
+									<svg width="24px" height="24px" viewBox="0 0 24 24">
+						                <rect id="box" fill="#FFFFFF" x="0" y="0" width="24" height="24"></rect>
+						                <rect id="symbol" fill="#2196F3" x="11" y="6" width="2" height="12"></rect>
+						                <rect id="symbol" fill="#2196F3" x="6" y="11" width="12" height="2"></rect>
+									</svg>
+								</span>
+								<span id="zoom256" class="tool is-inactive">
+									<svg width="24px" height="24px" viewBox="0 0 24 24">
+						                <rect id="box" fill="#FFFFFF" x="0" y="0" width="24" height="24"></rect>
+						                <rect id="symbol" fill="#2196F3" x="6" y="11" width="12" height="2"></rect>
+									</svg>
+								</span>
+							</div>
+						</div>
+					</div>
+                </div>
+            </div>
+
+			<div class="card cta">
+				<a href="day.html" class="button">More Observations</a>
+			</div>
+
+        </div>
+    </div>
+
+	<footer>
+        <div class="container" >
+			Powered by <a href="http://weewx.com/" target="_blank" >weewx</a>
+        </div>
+    </footer>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script type="text/javascript">
+	#raw
+		// touch fix
+		document.addEventListener("touchstart", function() {},false);
+
+		// toggle forecast descriptions
+		$( 'tr[id^="day_"]' ).click(function() {
+			$( this ).next( 'tr' ).toggle( 250, "linear" );
+		});
+
+		// toggle notifications
+		$('.notification').click(function() {
+			$('div.warnings').toggle( 100, "linear" );
+			$( '#notification' ).toggleClass( 'fa-bell fa-bell-slash' );
+		});
+
+		$('.tool').click(function() {
+			$(this).toggleClass('is-inactive').siblings().removeClass('is-inactive');
+		});
+
+		// get and loop the BOM radar images
+		$(function() {
+
+			// need to pause between each loop
+			function sleep(miliseconds) {
+				var currentTime = new Date().getTime();
+				while (currentTime + miliseconds >= new Date().getTime()) {
+				}
+			}
+
+			// convert Date object to yyyymmddhhmm in UTC
+			function create_timestamp(dateformat) {
+
+				var year = dateformat.getUTCFullYear();
+
+				// january is month zero, because that makes sense.
+				var month = dateformat.getUTCMonth() + 1;
+
+				// and there's no leading zero so we add that too.
+				if ( month <= 9 ) {
+					month = '0' + month;
+				}
+
+				var date = dateformat.getUTCDate();
+				// leading zeros added everywhere
+				if ( date <= 9 ) {
+					date = '0' + date;
+				}
+
+				var hour = dateformat.getUTCHours();
+				if ( hour <= 9 ) {
+					hour = '0' + hour;
+				}
+
+				var min = dateformat.getUTCMinutes();
+				if ( min <= 9 ) {
+					min = '0' + min;
+				}
+
+				var the_timestamp = "" + year + month + date + hour + min;
+				return the_timestamp;
+			}
+
+			function buildTimestampArray() {
+
+				// radar images are generated every 10 minutes and filenames contain yyyymmddhhmm
+				// in UTC time, so we need to round the current time to the nearest 10 minute interval
+				var coeff = 1000 * 60 * 10;
+				var now = new Date;
+				var rounded = new Date(Math.round(now.getTime() / coeff) * coeff);
+
+				// now round them _down_ to the nearest 10 minute interval by checking if the 10
+				// minute rounding is before or after the current time.
+				if ( rounded > now ) {
+					var new_now = new Date(rounded - 10 * 60000);
+				} else {
+					var new_now = rounded;
+				}
+
+				// harray!
+				timestamp_array  = [];
+
+				// push the first timestamp to array. we're also keeping the Date object to
+				// later create a time label for each frame.
+				var ts = create_timestamp(new_now);
+				timestamp_array.push( [ ts, new_now ] );
+
+				// create new timestamps 10 minutes apart going backwards, then push to array
+				for ( var i = 0; i < 4; i++ ) {
+
+					// subtract 10 minutes
+					var new_timestamp = new Date(new_now - 10 * 60000);
+
+					// push to array
+					var ts = create_timestamp(new_timestamp);
+						timestamp_array.push( [ ts, new_timestamp ] );
+					var new_now = new_timestamp;
+				}
+
+				// reverse the array to the first image is the oldest
+				timestamp_array.reverse();
+
+				return timestamp_array;
+
+			}
+
+			function getImages(z) {
+
+				$('#animation').attr('src', 'http://ws.cdn.bom.gov.au/radar/' + z + '.T.' + timestamp_array[index][0] + '.png');
+				$('.radar .background').css('background-image', 'url(http://ws.cdn.bom.gov.au/products/radar_transparencies/' + z + '.background.png)');
+				$('.radar .locations').css('background-image', 'url(http://ws.cdn.bom.gov.au/products/radar_transparencies/' + z + '.locations.png)');
+				$('.radar .topography').css('background-image', 'url(http://ws.cdn.bom.gov.au/products/radar_transparencies/' + z + '.topography.png)');
+
+				// calculate how old each image is
+				var now = new Date();
+				var timestamp = timestamp_array[index][1];
+				var difference = Math.round( ( now - timestamp ) / ( 1000 * 60 ) );
+				$('.animation-text').text( difference + ' minutes ago' );
+
+				// and loop
+				index = index + 1;
+				last_index = timestamp_array.length;
+				if ( index == last_index ) {
+					sleep( 1000 );
+					index = 0;
+
+				}
+			}
+
+			// run loop with interval between frames
+			function mainLoop( zoom ) {
+
+				// clear old timer
+				clearInterval( timer );
+				timer = false;
+
+				// get the timestamp array then loop
+				buildTimestampArray();
+				index = 0;
+				timer = setInterval( function() { getImages( zoom ); }, 500);
+			}
+
+			// lets get things started
+			var timer;
+			mainLoop('IDR282');
+			$('#zoom128').click( function(){ mainLoop('IDR283'); });
+			$('#zoom256').click( function(){ mainLoop('IDR282'); });
+			$('#zoom512').click( function(){ mainLoop('IDR281'); });
+
+		})
+
+	#end raw
+	</script>
+
+    #if $Extras.has_key('googleAnalyticsId')
+    <!-- Google Analytics -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', '$Extras.googleAnalyticsId', 'auto');
+        ga('send', 'pageview');
+    </script>
+    #end if
+</body>
+</html>
