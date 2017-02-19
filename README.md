@@ -6,7 +6,7 @@
 ![screenshot](https://github.com/raoulwegat/weewx-dogbone/raw/master/screenshot.png)
 
 
-[![Demo](https://j.gifs.com/An20v7.gif)](https://www.youtube.com/watch?v=vvFL7huZMiE)
+[![demo](https://github.com/raoulwegat/weewx-dogbone/blob/master/demo.gif)
 
 ## Description
 
