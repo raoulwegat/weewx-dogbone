@@ -1,9 +1,9 @@
 # Weewx Dogbone :iphone:
 
-*An Australian mobile-first skin+extension for weewx that has BOM forecast and radar data. Woof*
+*An Australian mobile-first skin+extension for weewx that has BOM forecast and radar data. Woof!*
 
 
-[![demo](https://github.com/raoulwegat/weewx-dogbone/blob/master/demo.gif)
+![demo](https://github.com/raoulwegat/weewx-dogbone/blob/master/demo.gif)
 
 
 ## Description
