@@ -3,10 +3,8 @@
 *An Australian mobile-first skin+extension for weewx that has BOM forecast and radar data. Woof*
 
 
-![screenshot](https://github.com/raoulwegat/weewx-dogbone/raw/master/screenshot.png)
-
-
 [![demo](https://github.com/raoulwegat/weewx-dogbone/blob/master/demo.gif)
+
 
 ## Description
 
