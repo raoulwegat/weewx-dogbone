@@ -108,7 +108,7 @@ h3 {
 	}
 
 	header {
-		padding: 2.5em 0 1em 0 !important;
+		padding: 1.5em 0 1em 0 !important;
 
 		a {
 			color: #fff;
@@ -228,6 +228,7 @@ h3 {
 
 			img {
 				vertical-align: text-top;
+				height: 120%;
 			}
 		}
 
@@ -477,10 +478,10 @@ box-shadow: 0px 0px 6px 0px rgba(201,201,201,1);
     }
 
     a {
-        color: $normal-link-color;
+        color: $dunkelgrau;
         transition: all 0.2s;
     }
-    a:hover { color: $normal-link-color-hover; }
+    /*** a:hover { color: $normal-link-color-hover; } ***/
 }
 
 .cc {
@@ -637,7 +638,7 @@ table.tablespacer {
 	.home {
 
 		header {
-			padding: 2em 1.5em 1em 1.5em !important;
+			padding: 1.5em 1.5em 1em 1.5em !important;
 		}
 
 		.card {

@@ -25,7 +25,7 @@
 			<div class="text-small text-align-left">Feels like $current.appTemp</div>
 
 			<div class="home-left">
-				#if $current.windSpeed.raw > 1
+				#if $current.windSpeed.raw > 0.0
 					<div class="text-small">Wind $current.windSpeed $current.windDir.ordinal_compass</div>
 				#else
 					<div class="text-small">Wind Still</div>
@@ -113,7 +113,7 @@
 							</tr>
 							<tr class="description description_$fcIndex">
 								<td></td>
-								<td colspan="3">$FC.getNode('forecast-period',index=$fcIndex).text</td>
+								<td colspan="3">$FC.getNode('forecast-period',index=$fcIndex).getNode('text',type="forecast").string</td>
 							</tr>
 
 							<tr>
@@ -169,7 +169,7 @@
 
 	<footer>
         <div class="container" >
-			Powered by <a href="http://weewx.com/" target="_blank" >weewx</a>
+			Powered by <a href="http://weewx.com/">weewx</a> and <a href="https://github.com/raoulwegat/weewx-dogbone">weewx-dogbone</a>
         </div>
     </footer>
 
